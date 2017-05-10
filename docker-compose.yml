@@ -1,0 +1,23 @@
+# 
+# ---
+# Docker compose file for ranger stkac
+#
+# Nigel Jones - jonesn@uk.ibm.com
+# ---
+
+version: '2'
+services:
+  ranger-admin:
+    build: ranger-admin
+    links:
+      - mariadb
+    #command: /usr/local/bin/dockerize -wait http://mariadb /opt/ranger-1.0.0-SNAPSHOT-admin/setup.sh
+    command: ["/usr/local/bin/dockerize","-wait","http://mariadb","/opt/ranger-1.0.0-SNAPSHOT-admin/setup.sh"]
+  mariadb:
+    environment:
+      - MYSQL_ROOT_PASSWORD=admin99
+    build: mariadb
+    ports:
+      - "3306:3306"
+    expose: 
+      - 3306
