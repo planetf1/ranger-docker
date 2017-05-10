@@ -50,9 +50,17 @@ RUN JAVA_HOME=/usr/lib/jvm/default-java ./setup.sh
 
 
 # setup the ranger server
-RUN sed -i 's|db_root_password=|db_root_password="{rootpw}"|' "${dadir}/install.properties" 
 WORKDIR /opt/ranger-1.0.0-SNAPSHOT-admin
+RUN sed -i 's|db_root_password=|db_root_password="{rootpw}"|' "${dadir}/install.properties" 
+RUN sed -i 's|audit_solr_urls=|audit_solr_urls=http://localhost:6083/solr/ranger_audits|' install.properties
 RUN /opt/ranger-1.0.0-SNAPSHOT-admin/setup.sh
+
+# Still to do
+# Configure solr here.... need parameters
+
+# Continue
+WORKDIR /opt/ranger-1.0.0-SNAPSHOT-admin
+RUN JAVA_HOME=/usr/lib/jvm/default-java /opt/ranger-1.0.0-SNAPSHOT-admin/setup.sh
 
 # Expose web port 
 EXPOSE          80 443 6083 6080
