@@ -9,15 +9,19 @@ version: '2'
 services:
   ranger-admin:
     build: ranger-admin
+    ports: 
+      - 6080:6080
+      - 6182:6182
+      - 6083:6083
+      - 6183:6183
+    depends_on:
+      - mariadb
     links:
       - mariadb
-    #command: /usr/local/bin/dockerize -wait http://mariadb /opt/ranger-1.0.0-SNAPSHOT-admin/setup.sh
-    command: ["/usr/local/bin/dockerize","-wait","http://mariadb","/opt/ranger-1.0.0-SNAPSHOT-admin/setup.sh"]
+    #command: ["/bin/sh","-c","/opt/ranger-1.0.0-SNAPSHOT-admin/ranger-docker-start.sh"]
   mariadb:
     environment:
       - MYSQL_ROOT_PASSWORD=admin99
     build: mariadb
     ports:
       - "3306:3306"
-    expose: 
-      - 3306
