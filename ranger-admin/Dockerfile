@@ -64,7 +64,7 @@ RUN JAVA_HOME=/usr/lib/jvm/default-java ./setup.sh
 WORKDIR /opt/ranger-1.0.0-SNAPSHOT-admin
 RUN sed -i 's|^db_root_password=|db_root_password=admin99|g' "${dadir}/install.properties" 
 RUN sed -i 's|^db_password=|db_password=admin|g' "${dadir}/install.properties" 
-RUN sed -i 's|^db_host=locslhost|db_host=mariadb|g' "${dadir}/install.properties" 
+RUN sed -i 's|^db_host=localhost|db_host=mariadb|g' "${dadir}/install.properties" 
 RUN sed -i 's|^audit_solr_urls=|audit_solr_urls=http://localhost:6083/solr/ranger_audits|g' install.properties
 
 # This cannot run unless mysql is active - so must be local, or must be done as 
