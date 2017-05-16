@@ -89,8 +89,13 @@ RUN echo "#/bin/sh" > /opt/ranger-1.0.0-SNAPSHOT-admin/ranger-docker-start.sh
 RUN echo "export JAVA_HOME=/usr/lib/jvm/default-java"  >> /opt/ranger-1.0.0-SNAPSHOT-admin/ranger-docker-start.sh
 RUN echo "/usr/local/bin/dockerize -wait tcp://mariadb:3306 -timeout 120s" >> /opt/ranger-1.0.0-SNAPSHOT-admin/ranger-docker-start.sh
 RUN echo "/opt/ranger-1.0.0-SNAPSHOT-admin/setup.sh" >> /opt/ranger-1.0.0-SNAPSHOT-admin/ranger-docker-start.sh
-RUN echo "/opt/ranger-1.0.0-SNAPSHOT-admin/ranger-admin start" >> /opt/ranger-1.0.0-SNAPSHOT-admin/ranger-docker-start.sh
+RUN echo "/usr/bin/ranger-admin start" >> /opt/ranger-1.0.0-SNAPSHOT-admin/ranger-docker-start.sh
 RUN chmod +x /opt/ranger-1.0.0-SNAPSHOT-admin/ranger-docker-start.sh
+RUN echo "--- Ranger running ---"  >> /opt/ranger-1.0.0-SNAPSHOT-admin/ranger-docker-start.sh
+RUN echo "while [ true ]" >> /opt/ranger-1.0.0-SNAPSHOT-admin/ranger-docker-start.sh
+RUN echo "do"  >> /opt/ranger-1.0.0-SNAPSHOT-admin/ranger-docker-start.sh
+RUN echo "  sleep 10000"  >> /opt/ranger-1.0.0-SNAPSHOT-admin/ranger-docker-start.sh
+RUN echo "done"  >> /opt/ranger-1.0.0-SNAPSHOT-admin/ranger-docker-start.sh
 
 # Hopefully running that script will finish the configuration (which needs mysql)
 ENTRYPOINT ["/bin/sh","-c","/opt/ranger-1.0.0-SNAPSHOT-admin/ranger-docker-start.sh"]
