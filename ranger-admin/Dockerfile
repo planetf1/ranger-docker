@@ -24,7 +24,7 @@ ENV		 dadir			 /opt/ranger-1.0.0-SNAPSHOT-admin
 
 # Let's start with some core packages we need
 # Note: installs python 2.7 & 3 -- latter not needed. refine later.
-RUN apt-get update && apt-get install -y wget libmysql-java python default-jdk iputils-ping net-tools vim
+RUN apt-get update && apt-get install -y wget libmysql-java python default-jdk iputils-ping net-tools vim lsof
 
 # Add dockerize wait tool - this allows VMs to wait for network ports to be available.
 # Only needed if running in a docker-compose type environment, not for single image
@@ -39,6 +39,8 @@ ADD dist/ranger-1.0.0-SNAPSHOT-admin.tar.gz /opt
 # Get the mysql connector ready
 
 # Setup solr - needs java, contributed script for local solr install
+#
+# Script#s default port is 6083. 
 WORKDIR /opt/ranger-1.0.0-SNAPSHOT-admin/contrib/solr_for_audit_setup
 RUN sed -i 's|SOLR_INSTALL=false|SOLR_INSTALL=true|' install.properties
 RUN sed -i 's|SOLR_DOWNLOAD_URL=|SOLR_DOWNLOAD_URL=http://www.mirrorservice.org/sites/ftp.apache.org/lucene/solr/6.5.1/solr-6.5.1.tgz|' install.properties
@@ -89,6 +91,10 @@ RUN echo "#/bin/sh" > /opt/ranger-1.0.0-SNAPSHOT-admin/ranger-docker-start.sh
 RUN echo "export JAVA_HOME=/usr/lib/jvm/default-java"  >> /opt/ranger-1.0.0-SNAPSHOT-admin/ranger-docker-start.sh
 RUN echo "/usr/local/bin/dockerize -wait tcp://mariadb:3306 -timeout 120s" >> /opt/ranger-1.0.0-SNAPSHOT-admin/ranger-docker-start.sh
 RUN echo "/opt/ranger-1.0.0-SNAPSHOT-admin/setup.sh" >> /opt/ranger-1.0.0-SNAPSHOT-admin/ranger-docker-start.sh
+
+# Now let's start solr 
+RUN echo "/opt/solr/ranger_audit_server/scripts/start_solr.sh &" >> /opt/ranger-1.0.0-SNAPSHOT-admin/ranger-docker-start.sh
+
 RUN echo "/usr/bin/ranger-admin start" >> /opt/ranger-1.0.0-SNAPSHOT-admin/ranger-docker-start.sh
 RUN chmod +x /opt/ranger-1.0.0-SNAPSHOT-admin/ranger-docker-start.sh
 RUN echo "--- Ranger running ---"  >> /opt/ranger-1.0.0-SNAPSHOT-admin/ranger-docker-start.sh
