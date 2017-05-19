@@ -1,27 +1,36 @@
 # 
 # ---
-# Docker compose file for ranger stkac
+# Docker compose file for ranger stack
 #
 # Nigel Jones - jonesn@uk.ibm.com
 # ---
 
 version: '2'
+
 services:
+  # --- This is the main ranger server
   ranger-admin:
+    # Dockerfile for this image
     build: ranger-admin
     ports: 
       - 6080:6080
       - 6182:6182
       - 6083:6083
       - 6183:6183
+    # We'll declare the mariadb container as a dependency, and ensure we can access it via the mariadb hostname
     depends_on:
       - mariadb
     links:
       - mariadb
-    #command: ["/bin/sh","-c","/opt/ranger-1.0.0-SNAPSHOT-admin/ranger-docker-start.sh"]
+    # Rather than executing a command here, the actual ranger image defines an appropriate entrypoint
+    # which completes configuration activities & starts the server
+
+  # This is the database server for ranger. The docker image assumes hostname maria sitting on the default port
   mariadb:
     environment:
+    # Not parameterized....
       - MYSQL_ROOT_PASSWORD=admin99
+    # DOckerfile for this image (not a lot going on here)
     build: mariadb
     ports:
       - "3306:3306"

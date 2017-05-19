@@ -10,14 +10,13 @@
 #   * No containers in use yet so data will be lost each time
 # ---
 
-# Let's use UBUNTU
+# Let's use UBUNTU (latest) for the base
 FROM            ubuntu
 
 # any problems let me know
 MAINTAINER      Nigel Jones <jonesn@uk.ibm.com>
 
 # Will use these more in future
-
 ENV		 rootpw			 admin99
 ENV		 build 			 ranger-1.0.0-SNAPSHOT
 ENV		 dadir			 /opt/ranger-1.0.0-SNAPSHOT-admin
