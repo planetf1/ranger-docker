@@ -28,6 +28,29 @@ Mariadb will configure & start, as will ranger including solr. The process will 
 to any download time.
 <p>
 You can then connect to Ranger as usual for example at http://mymachine:6080/
+<h3>Zero to hero in six steps (Azure)</h3>
+<p>An example of how to run ranger under docker using MS Azure with very few steps -- assumes an existing Azure Account
+<ol>
+<li>Install Docker & GIT if not already done
+<p>Go to http://www.docker.com & install docker for Windows, Mac or Linux following the instructions
+<p>Also install git from https://git-scm.com/download/
+<li>Create an Azure container service
+<p>
+Lots of possible command options, but to default to US-West & basic ubuntu server:
+<pre>docker-machine create --driver azure --azure-subscription-id aaaaaaaa-bbbb-cccc-dddd-eeeeee nigeldocker</pre>
+<li>Configure the environment for the new docker machine:
+ <pre>docker-machine env nigeldocker</pre>
+ <p>This will return a command to run as the last line which should be run such as
+ <pre>FOR /f "tokens=*" %i IN ('docker-machine env nigeldocker') DO @%i</pre>
+ <li>Now get hold of the ranger docker source in git
+ <pre>git clone https://github.com/planetf1/ranger-docker.git</pre>
+ <li>Build and run the docker images
+ <pre>cd ranger-docker
+docker-compose up</pre>
+ <li>Use the ranger UI
+ <p>Open up a web browser and go to http://mydockermachineip:6080/
+ </ol>
+ <p>Docker images can also be run locally, remotely, or using other cloud providers
 <h2>Issues/problems</h2>
 Please add any feedback in the <a href="https://github.com/planetf1/ranger-docker/issues">issue tracker</a> on github.
 Or if it relates to integration into ranger use <a href="https://issues.apache.org/jira/browse/RANGER-1572">RANGER-1572</a> 
