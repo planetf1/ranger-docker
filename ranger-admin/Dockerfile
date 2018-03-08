@@ -43,7 +43,7 @@ ADD dist/ranger-1.0.0-SNAPSHOT-admin.tar.gz /opt
 # Script#s default port is 6083. 
 WORKDIR /opt/ranger-1.0.0-SNAPSHOT-admin/contrib/solr_for_audit_setup
 RUN sed -i 's|SOLR_INSTALL=false|SOLR_INSTALL=true|' install.properties
-RUN sed -i 's|SOLR_DOWNLOAD_URL=|SOLR_DOWNLOAD_URL=http://www.mirrorservice.org/sites/ftp.apache.org/lucene/solr/6.6.2/solr-6.6.2.tgz|' install.properties
+RUN sed -i 's|SOLR_DOWNLOAD_URL=|SOLR_DOWNLOAD_URL=http://www.mirrorservice.org/sites/ftp.apache.org/lucene/solr/6.6.3/solr-6.6.3.tgz|' install.properties
 
 #Update path to include java, so that when we run the container it is available
 # default shell isn't bash :-(
