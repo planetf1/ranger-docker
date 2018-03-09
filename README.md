@@ -47,6 +47,23 @@ Lots of possible command options, but to default to US-West & basic ubuntu serve
  <li>Build and run the docker images
  <pre>cd ranger-docker
 docker-compose up</pre>
+<li>Checking the docker container id - needed for subsequent interaction with the container
+<pre>
+ibmuser@ibmvm:~$ docker ps
+CONTAINER ID        IMAGE                       COMMAND                  CREATED             STATUS              PORTS                                                                              NAMES
+1a2ed045306c        rangerdocker_ranger-admin   "/bin/sh -c /opt/ran…"   2 hours ago         Up 2 hours          0.0.0.0:6080->6080/tcp, 0.0.0.0:6083->6083/tcp, 0.0.0.0:6182-6183->6182-6183/tcp   rangerdocker_ranger-admin_1
+2abd3e403c25        rangerdocker_mariadb        "docker-entrypoint.s…"   2 hours ago         Up 2 hours          0.0.0.0:3306->3306/tcp                                                             rangerdocker_mariadb_1
+</pre>
+<li>>Deploying a ranger plugin (for resource lookup)
+An example:
+<pre>
+docker exec -it 1a2ed045306c mkdir /opt/ranger-1.0.0-SNAPSHOT-admin/ews/webapp/WEB-INF/classes/ranger-plugins/gaian
+docker cp ./ranger-gaian-plugin-1.0.0-SNAPSHOT.jar 1a2ed045306c:/opt/ranger-1.0.0-SNAPSHOT-admin/ews/webapp/WEB-INF/classes/ranger-plugins/gaian
+</pre>
+<li>To look around the docker install for debugging etc:
+<pre>
+docker exec -it 1a2ed045306c /bin/bash
+</pre>
  <li>Use the ranger UI
  <p>Open up a web browser and go to http://mydockermachineip:6080/
  </ol>
