@@ -6,6 +6,10 @@ with new plugins, or minor code enhancements.
 
 This code is currently hosted on github at https://github.com/planetf1/ranger-docker 
 but the hope is to integrate it into the Apache Ranger project
+
+Update
+ * MariaDB now listens externally on port 33306 to avoid clash with a locally running
+   database
 <h2>Current functionality</h2>
 <ul>
 <li>Configure & launch ranger admin server
