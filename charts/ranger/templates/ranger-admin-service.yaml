@@ -1,0 +1,31 @@
+apiVersion: v1
+kind: Service
+metadata:
+  creationTimestamp: null
+  labels:
+    app.kubernetes.io/name: {{ include "myapp.name" . }}
+    helm.sh/chart: {{ include "myapp.chart" . }}
+    app.kubernetes.io/instance: {{ .Release.Name }}
+    app.kubernetes.io/managed-by: {{ .Release.Service }}
+  name: {{ include "myapp.fullname" . }}-ranger-service
+spec:
+  ports:
+  - name: "6080"
+    port: 6080
+    targetPort: 6080
+  - name: "6182"
+    port: 6182
+    targetPort: 6182
+  - name: "6083"
+    port: 6083
+    targetPort: 6083
+  - name: "6183"
+    port: 6183
+    targetPort: 6183
+  - name: "8886"
+    port: 8886
+    targetPort: 8886
+  selector:
+    app.kubernetes.io/name: {{ include "myapp.name" . }}
+    app.kubernetes.io/instance: {{ .Release.Name }}
+

@@ -2,12 +2,12 @@ apiVersion: extensions/v1beta1
 kind: Deployment
 metadata:
   annotations:
-    kompose.cmd: kompose convert --chart
+    kompose.cmd: kompose convert
     kompose.version: 1.16.0 ()
   creationTimestamp: null
   labels:
-    io.kompose.service: ranger-admin
-  name: ranger-admin
+    io.kompose.service: mariadb
+  name: mariadb
 spec:
   replicas: 1
   strategy: {}
@@ -15,17 +15,16 @@ spec:
     metadata:
       creationTimestamp: null
       labels:
-        io.kompose.service: ranger-admin
+        io.kompose.service: mariadb
     spec:
       containers:
-      - image: ranger-admin
-        name: ranger-admin
+      - env:
+        - name: MYSQL_ROOT_PASSWORD
+          value: admin99
+        image: mariadb
+        name: mariadb
         ports:
-        - containerPort: 6080
-        - containerPort: 6182
-        - containerPort: 6083
-        - containerPort: 6183
-        - containerPort: 8886
+        - containerPort: 3306
         resources: {}
       restartPolicy: Always
 status: {}
