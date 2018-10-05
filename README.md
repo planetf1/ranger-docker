@@ -12,12 +12,14 @@ Update
    database
 <h2>Current functionality</h2>
 <ul>
+<li>Download and build ranger itself, from git
 <li>Configure & launch ranger admin server
 <li>Solr active/running
 <li>No ranger plugins setup
 <li>little parameterization -- all hardcoded
 <li>No data container
 </ul>
+NOTE: The build takes a long time (over 30 minutes)
 <h2>Image Composition</h2>
 <ul>
 <li>ranger-admin - the customized ranger image, also runs solr
@@ -61,8 +63,9 @@ CONTAINER ID        IMAGE                       COMMAND                  CREATED
 <li>>Deploying a ranger plugin (for resource lookup)
 An example:
 <pre>
-docker exec -it 1a2ed045306c mkdir /opt/ranger-1.0.0-SNAPSHOT-admin/ews/webapp/WEB-INF/classes/ranger-plugins/gaian
-docker cp ./ranger-gaian-plugin-1.0.0-SNAPSHOT.jar 1a2ed045306c:/opt/ranger-1.0.0-SNAPSHOT-admin/ews/webapp/WEB-INF/classes/ranger-plugins/gaian
+docker exec -it 1a2ed045306c mkdir /opt/ranger-2.0.0-SNAPSHOT-admin/ews/webapp/WEB-INF/classes/ranger-plugins/gaian
+docker cp ./ranger-gaian-plugin-1.0.0-SNAPSHOT.jar 1a2ed045306c:/opt/ranger-2.0
+.0-SNAPSHOT-admin/ews/webapp/WEB-INF/classes/ranger-plugins/gaian
 </pre>
 <li>To look around the docker install for debugging etc:
 <pre>
