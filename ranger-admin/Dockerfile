@@ -19,11 +19,11 @@ MAINTAINER      Nigel Jones <nigel.l.jones+gh@gmail.com>
 # Will use these more in future
 
 ENV		 rootpw			 admin99
-ENV		 build 			 ranger-1.0.0-SNAPSHOT
-ENV		 dadir			 /opt/ranger-1.0.0-SNAPSHOT-admin
+ENV		 build 			 ranger-2.0.0-SNAPSHOT
+ENV		 dadir			 /opt/ranger-2.0.0-SNAPSHOT-admin
 
 # Let's start with some core packages we need
-RUN apt-get update && apt-get install -y wget libmysql-java python openjdk-8-jdk maven git iputils-ping net-tools vim lsof apt-utils build-essential
+RUN apt-get update && apt-get install -y wget libmysql-java python openjdk-8-jdk maven git iputils-ping net-tools vim lsof apt-utils build-essential lsb-core lsb-release
 
 # It turns out mvn 3.5.3 (current on ubuntu distro) nor 3.5.2 work with ranger. 3.5.0 or 3.5.4 only
 WORKDIR /root
@@ -112,15 +112,17 @@ RUN chmod +x /root/.profile
 # So this is the workaround
 RUN JAVA_HOME=/usr/lib/jvm/java-8-openjdk-amd64 ./setup.sh
 
-# correcting an earlier bad setting -- placed here to avoid full image rebuild
-ENV		 dadir			 /opt/ranger-2.0.0-SNAPSHOT-admin
-
 # setup the ranger server
 WORKDIR /opt/ranger-2.0.0-SNAPSHOT-admin
 RUN sed -i 's|^db_root_password=|db_root_password=admin99|g' "${dadir}/install.properties" 
 RUN sed -i 's|^db_password=|db_password=admin|g' "${dadir}/install.properties" 
 RUN sed -i 's|^db_host=localhost|db_host=mariadb|g' "${dadir}/install.properties" 
 RUN sed -i 's|^audit_solr_urls=|audit_solr_urls=http://localhost:6083/solr/ranger_audits|g' install.properties
+RUN sed -i 's|^rangerAdmin=|rangerAdmin_password=admin999|g' "${dadir}/install.properties"
+RUN sed -i 's|^rangerTagsync_password=|rangerTagsync_password=admin999|g' "${dadir}/install.properties"
+RUN sed -i 's|^rangerUsersync_password=|rangerUsersync_password=admin999|g' "${dadir}/install.properties"
+RUN sed -i 's|^keyadmin_password=|keyadmin_password=admin999|g' "${dadir}/install.properties"
+
 
 # This cannot run unless mysql is active - so must be local, or must be done as 
 # part of the startup if using docker-compose
@@ -142,7 +144,9 @@ EXPOSE          6080 6182 6083 6183
 # TODO - this could be moved to a dist. script
 
 RUN echo "#/bin/sh" > /opt/ranger-2.0.0-SNAPSHOT-admin/ranger-docker-start.sh
-RUN echo "export JAVA_HOME=/usr/lib/jvm/default-java"  >> /opt/ranger-2.0.0-SNAPSHOT-admin/ranger-docker-start.sh
+RUN echo "export JAVA_HOME=/usr/lib/jvm/java-8-openjdk-amd64"  >> /opt/ranger-2.0.0-SNAPSHOT-admin/ranger-docker-start.sh
+RUN echo "export PATH=${JAVA_HOME}:$PATH"  >> /opt/ranger-2.0.0-SNAPSHOT-admin/ranger-docker-start.sh
+
 RUN echo "/usr/local/bin/dockerize -wait tcp://mariadb:3306 -timeout 120s" >> /opt/ranger-2.0.0-SNAPSHOT-admin/ranger-docker-start.sh
 RUN echo "/opt/ranger-2.0.0-SNAPSHOT-admin/setup.sh" >> /opt/ranger-2.0.0-SNAPSHOT-admin/ranger-docker-start.sh
 
@@ -151,7 +155,6 @@ RUN echo "/opt/solr/ranger_audit_server/scripts/start_solr.sh &" >> /opt/ranger-
 
 RUN echo "/usr/bin/ranger-admin start" >> /opt/ranger-2.0.0-SNAPSHOT-admin/ranger-docker-start.sh
 RUN chmod +x /opt/ranger-2.0.0-SNAPSHOT-admin/ranger-docker-start.sh
-RUN echo "--- Ranger running ---"  >> /opt/ranger-2.0.0-SNAPSHOT-admin/ranger-docker-start.sh
 RUN echo "while [ true ]" >> /opt/ranger-2.0.0-SNAPSHOT-admin/ranger-docker-start.sh
 RUN echo "do"  >> /opt/ranger-2.0.0-SNAPSHOT-admin/ranger-docker-start.sh
 RUN echo "  sleep 10000"  >> /opt/ranger-2.0.0-SNAPSHOT-admin/ranger-docker-start.sh
