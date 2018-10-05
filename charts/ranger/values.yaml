@@ -4,12 +4,12 @@
 
 image:
   ranger:
-    repository: ranger-docker_ranger-admin
+    repository: planetf1/ranger-docker_ranger-admin
     tag: latest
     pullPolicy: IfNotPresent
 
   mariadb:
-    repository: ranger-docker_mariadb
+    repository: planetf1/ranger-docker_mariadb
     tag: latest
     pullPolicy: IfNotPresent
 
