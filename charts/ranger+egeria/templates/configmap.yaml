@@ -1,0 +1,15 @@
+apiVersion: v1
+kind: ConfigMap
+metadata:
+    creationTimestamp: null
+    name: {{ include "myapp.fullname" . }}-configmap
+    labels:
+        app.kubernetes.io/name: {{ include "myapp.name" . }}
+        helm.sh/chart: {{ include "myapp.chart" . }}
+        app.kubernetes.io/instance: {{ .Release.Name }}
+        app.kubernetes.io/managed-by: {{ .Release.Service }}
+data:
+    myvalue: "Sample configuration element - for future use"
+
+
+

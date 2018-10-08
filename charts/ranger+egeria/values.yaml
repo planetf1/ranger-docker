@@ -1,0 +1,25 @@
+# Default values for ranger.
+# This is a YAML-formatted file.
+# Declare variables to be passed into your templates.
+
+image:
+  ranger:
+    repository: planetf1/ranger-docker_ranger-admin
+    tag: latest
+    pullPolicy: IfNotPresent
+
+  mariadb:
+    repository: planetf1/ranger-docker_mariadb
+    tag: latest
+    pullPolicy: IfNotPresent
+
+  egeria:
+    repository: planetf1/egeria-standalone
+    tag: latest
+    pullPolicy: IfNotPresent
+
+  nameOverride: ""
+  fullnameOverride: ""
+
+
+
