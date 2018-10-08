@@ -7,25 +7,26 @@ metadata:
     helm.sh/chart: {{ include "myapp.chart" . }}
     app.kubernetes.io/instance: {{ .Release.Name }}
     app.kubernetes.io/managed-by: {{ .Release.Service }}
+    app.kubernetes.io/component: ranger-admin-service
+
   name: {{ include "myapp.fullname" . }}-ranger-service
 spec:
+  type: LoadBalancer
   ports:
-  - name: "6080"
+  - name: "ranger-admin"
     port: 6080
     targetPort: 6080
-  - name: "6182"
+  - name: "ranger-admin-ssl"
     port: 6182
     targetPort: 6182
-  - name: "6083"
+  - name: "ranger-solr"
     port: 6083
     targetPort: 6083
-  - name: "6183"
+  - name: "ranger-solr-ssl"
     port: 6183
     targetPort: 6183
-  - name: "8886"
-    port: 8886
-    targetPort: 8886
   selector:
     app.kubernetes.io/name: {{ include "myapp.name" . }}
     app.kubernetes.io/instance: {{ .Release.Name }}
+    app.kubernetes.io/component: ranger-admin-service
 

@@ -8,12 +8,16 @@ metadata:
     helm.sh/chart: {{ include "myapp.chart" . }}
     app.kubernetes.io/instance: {{ .Release.Name }}
     app.kubernetes.io/managed-by: {{ .Release.Service }}
+    app.kubernetes.io/component: ranger-mariadb-service
+
 spec:
   replicas: 1
   selector:
     matchLabels:
       app.kubernetes.io/name: {{ include "myapp.name" . }}
       app.kubernetes.io/instance: {{ .Release.Name }}
+      app.kubernetes.io/component: ranger-mariadb-service
+
   strategy: {}
   template:
     metadata:
@@ -21,12 +25,15 @@ spec:
       labels:
         app.kubernetes.io/name: {{ include "myapp.name" . }}
         app.kubernetes.io/instance: {{ .Release.Name }}
+        app.kubernetes.io/component: ranger-mariadb-service
+
     spec:
       containers:
       - env:
         - name: MYSQL_ROOT_PASSWORD
           value: admin99
         image: "{{ .Values.image.mariadb.repository }}:{{ .Values.image.mariadb.tag }}"
+        ImagePullPolicy: Always
         name: {{ .Chart.Name }}-mariadb
         ports:
         - containerPort: 3306

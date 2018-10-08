@@ -118,7 +118,7 @@ RUN sed -i 's|^db_root_password=|db_root_password=admin99|g' "${dadir}/install.p
 RUN sed -i 's|^db_password=|db_password=admin|g' "${dadir}/install.properties" 
 RUN sed -i 's|^db_host=localhost|db_host=mariadb|g' "${dadir}/install.properties" 
 RUN sed -i 's|^audit_solr_urls=|audit_solr_urls=http://localhost:6083/solr/ranger_audits|g' install.properties
-RUN sed -i 's|^rangerAdmin=|rangerAdmin_password=admin999|g' "${dadir}/install.properties"
+RUN sed -i 's|^rangerAdmin_password=|rangerAdmin_password=admin999|g' "${dadir}/install.properties"
 RUN sed -i 's|^rangerTagsync_password=|rangerTagsync_password=admin999|g' "${dadir}/install.properties"
 RUN sed -i 's|^rangerUsersync_password=|rangerUsersync_password=admin999|g' "${dadir}/install.properties"
 RUN sed -i 's|^keyadmin_password=|keyadmin_password=admin999|g' "${dadir}/install.properties"
