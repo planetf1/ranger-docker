@@ -1,0 +1,1006 @@
+[debug] Created tunnel using local port: '58584'
+
+[debug] SERVER: "127.0.0.1:58584"
+
+[debug] Original chart version: ""
+[debug] CHART PATH: /Users/jonesn/src/ranger-docker/charts/ranger+egeria+kafka
+
+2018/10/10 15:04:45 warning: skipped value for image: Not a table.
+NAME:   gone-blackbird
+REVISION: 1
+RELEASED: Wed Oct 10 15:04:45 2018
+CHART: rangeregeria-0.0.1
+USER-SUPPLIED VALUES:
+{}
+
+COMPUTED VALUES:
+image:
+  egeria:
+    pullPolicy: IfNotPresent
+    repository: planetf1/egeria-standalone
+    tag: latest
+  fullnameOverride: ""
+  mariadb:
+    pullPolicy: IfNotPresent
+    repository: planetf1/ranger-docker_mariadb
+    tag: latest
+  nameOverride: ""
+  ranger:
+    pullPolicy: IfNotPresent
+    repository: planetf1/ranger-docker_ranger-admin
+    tag: latest
+kafka:
+  additionalPorts: {}
+  affinity: {}
+  configurationOverrides:
+    offsets.topic.replication.factor: 3
+  envOverrides: {}
+  external:
+    distinct: false
+    dns:
+      useExternal: true
+      useInternal: false
+    domain: cluster.local
+    enabled: true
+    firstListenerPort: 31090
+    init:
+      image: lwolf/kubectl_deployer
+      imagePullPolicy: IfNotPresent
+      imageTag: "0.4"
+    servicePort: 19092
+    type: LoadBalancer
+  global: {}
+  headless:
+    port: 9092
+  image: confluentinc/cp-kafka
+  imagePullPolicy: IfNotPresent
+  imageTag: 4.1.2-2
+  jmx:
+    configMap:
+      enabled: true
+      overrideConfig: {}
+      overrideName: ""
+    port: 5555
+    whitelistObjectNames:
+    - kafka.controller:*
+    - kafka.server:*
+    - java.lang:*
+    - kafka.network:*
+    - kafka.log:*
+  kafkaHeapOptions: -Xmx1G -Xms1G
+  logSubPath: logs
+  nodeSelector: {}
+  persistence:
+    enabled: true
+    mountPath: /opt/kafka/data
+    size: 1Gi
+  podAnnotations: {}
+  podManagementPolicy: OrderedReady
+  prometheus:
+    jmx:
+      enabled: false
+      image: solsson/kafka-prometheus-jmx-exporter@sha256
+      imageTag: a23062396cd5af1acdf76512632c20ea6be76885dfc20cd9ff40fb23846557e8
+      interval: 10s
+      port: 5556
+      resources: {}
+      scrapeTimeout: 10s
+    kafka:
+      enabled: false
+      image: danielqsj/kafka-exporter
+      imageTag: v1.2.0
+      interval: 10s
+      port: 9308
+      resources: {}
+      scrapeTimeout: 10s
+    operator:
+      enabled: false
+      serviceMonitor:
+        namespace: monitoring
+        selector:
+          prometheus: kube-prometheus
+  rbac:
+    enabled: false
+  readinessProbe:
+    failureThreshold: 3
+    initialDelaySeconds: 30
+    periodSeconds: 10
+    successThreshold: 1
+    timeoutSeconds: 5
+  replicas: 3
+  resources: {}
+  terminationGracePeriodSeconds: 60
+  tolerations: []
+  topics: []
+  updateStrategy:
+    type: OnDelete
+  zookeeper:
+    affinity: {}
+    enabled: true
+    env:
+      JMXAUTH: "false"
+      JMXDISABLE: "false"
+      JMXPORT: 1099
+      JMXSSL: "false"
+      ZK_CLIENT_PORT: 2181
+      ZK_ELECTION_PORT: 3888
+      ZK_HEAP_SIZE: 1G
+      ZK_INIT_LIMIT: 5
+      ZK_LOG_LEVEL: INFO
+      ZK_MAX_CLIENT_CNXNS: 60
+      ZK_MAX_SESSION_TIMEOUT: 40000
+      ZK_MIN_SESSION_TIMEOUT: 4000
+      ZK_PURGE_INTERVAL: 0
+      ZK_SERVER_PORT: 2888
+      ZK_SNAP_RETAIN_COUNT: 3
+      ZK_SYNC_LIMIT: 10
+      ZK_TICK_TIME: 2000
+    exporters:
+      jmx:
+        config:
+          lowercaseOutputName: false
+          rules:
+          - name: zookeeper_$2
+            pattern: org.apache.ZooKeeperService<name0=ReplicatedServer_id(\d+)><>(\w+)
+          - labels:
+              replicaId: $2
+            name: zookeeper_$3
+            pattern: org.apache.ZooKeeperService<name0=ReplicatedServer_id(\d+), name1=replica.(\d+)><>(\w+)
+          - labels:
+              memberType: $3
+              replicaId: $2
+            name: zookeeper_$4
+            pattern: org.apache.ZooKeeperService<name0=ReplicatedServer_id(\d+), name1=replica.(\d+),
+              name2=(\w+)><>(\w+)
+          - labels:
+              memberType: $3
+              replicaId: $2
+            name: zookeeper_$4_$5
+            pattern: org.apache.ZooKeeperService<name0=ReplicatedServer_id(\d+), name1=replica.(\d+),
+              name2=(\w+), name3=(\w+)><>(\w+)
+          startDelaySeconds: 30
+        enabled: false
+        env: {}
+        image:
+          pullPolicy: IfNotPresent
+          repository: sscaling/jmx-prometheus-exporter
+          tag: 0.3.0
+        livenessProbe:
+          failureThreshold: 8
+          httpGet:
+            path: /metrics
+            port: jmxxp
+          initialDelaySeconds: 30
+          periodSeconds: 15
+          successThreshold: 1
+          timeoutSeconds: 60
+        path: /metrics
+        ports:
+          jmxxp:
+            containerPort: 9404
+            protocol: TCP
+        readinessProbe:
+          failureThreshold: 8
+          httpGet:
+            path: /metrics
+            port: jmxxp
+          initialDelaySeconds: 30
+          periodSeconds: 15
+          successThreshold: 1
+          timeoutSeconds: 60
+        resources: {}
+      zookeeper:
+        config:
+          logLevel: info
+          resetOnScrape: "true"
+        enabled: false
+        env: {}
+        image:
+          pullPolicy: IfNotPresent
+          repository: josdotso/zookeeper-exporter
+          tag: v1.1.2
+        livenessProbe:
+          failureThreshold: 8
+          httpGet:
+            path: /metrics
+            port: zookeeperxp
+          initialDelaySeconds: 30
+          periodSeconds: 15
+          successThreshold: 1
+          timeoutSeconds: 60
+        path: /metrics
+        ports:
+          zookeeperxp:
+            containerPort: 9141
+            protocol: TCP
+        readinessProbe:
+          failureThreshold: 8
+          httpGet:
+            path: /metrics
+            port: zookeeperxp
+          initialDelaySeconds: 30
+          periodSeconds: 15
+          successThreshold: 1
+          timeoutSeconds: 60
+        resources: {}
+    global: {}
+    image:
+      PullPolicy: IfNotPresent
+      pullPolicy: IfNotPresent
+      repository: gcr.io/google_samples/k8szk
+      tag: v3
+    jobs:
+      chroots:
+        activeDeadlineSeconds: 300
+        backoffLimit: 5
+        completions: 1
+        config:
+          create: []
+        enabled: false
+        env: []
+        parallelism: 1
+        resources: {}
+        restartPolicy: Never
+    livenessProbe:
+      exec:
+        command:
+        - zkOk.sh
+      initialDelaySeconds: 20
+    nodeSelector: {}
+    persistence:
+      accessMode: ReadWriteOnce
+      enabled: false
+      size: 5Gi
+    podAnnotations: {}
+    podDisruptionBudget:
+      maxUnavailable: 1
+    podLabels: {}
+    port: 2181
+    ports:
+      client:
+        containerPort: 2181
+        protocol: TCP
+      election:
+        containerPort: 3888
+        protocol: TCP
+      server:
+        containerPort: 2888
+        protocol: TCP
+    readinessProbe:
+      exec:
+        command:
+        - zkOk.sh
+      initialDelaySeconds: 20
+    replicaCount: 3
+    resources: {}
+    securityContext:
+      fsGroup: 1000
+      runAsUser: 1000
+    service:
+      annotations: {}
+      ports:
+        client:
+          port: 2181
+          protocol: TCP
+          targetPort: client
+      type: ClusterIP
+    terminationGracePeriodSeconds: 1800
+    tolerations: []
+    updateStrategy:
+      type: OnDelete
+    url: ""
+
+HOOKS:
+---
+# gone-blackbird-test-topic-create-consume-produce
+apiVersion: v1
+kind: Pod
+metadata:
+  name: "gone-blackbird-test-topic-create-consume-produce"
+  annotations:
+    "helm.sh/hook": test-success
+spec:
+  containers:
+  - name: gone-blackbird-test-consume
+    image: confluentinc/cp-kafka:4.1.2-2
+    command:
+    - sh
+    - -c
+    - |
+      # Create the topic
+      kafka-topics --zookeeper gone-blackbird-zookeeper:2181 --topic helm-test-topic-create-consume-produce --create --partitions 1 --replication-factor 1 --if-not-exists && \
+      # Create a message
+      MESSAGE="`date -u`" && \
+      # Produce a test message to the topic
+      echo "$MESSAGE" | kafka-console-producer --broker-list gone-blackbird-kafka:9092 --topic helm-test-topic-create-consume-produce && \
+      # Consume a test message from the topic
+      kafka-console-consumer --bootstrap-server gone-blackbird-kafka-headless:9092 --topic helm-test-topic-create-consume-produce --from-beginning --timeout-ms 2000 --max-messages 1 | grep "$MESSAGE"
+  restartPolicy: Never
+MANIFEST:
+
+---
+# Source: rangeregeria/templates/configmap.yaml
+apiVersion: v1
+kind: ConfigMap
+metadata:
+    creationTimestamp: null
+    name: gone-blackbird-rangeregeria-configmap
+    labels:
+        app.kubernetes.io/name: rangeregeria
+        helm.sh/chart: rangeregeria-0.0.1
+        app.kubernetes.io/instance: gone-blackbird
+        app.kubernetes.io/managed-by: Tiller
+data:
+    myvalue: "Sample configuration element - for future use"
+---
+# Source: rangeregeria/charts/kafka/charts/zookeeper/templates/service-headless.yaml
+apiVersion: v1
+kind: Service
+metadata:
+  name: gone-blackbird-zookeeper-headless
+  labels:
+    app: zookeeper
+    chart: zookeeper-1.0.2
+    release: gone-blackbird
+    heritage: Tiller
+spec:
+  clusterIP: None
+  ports:
+    - name: client
+      port: 2181
+      targetPort: 
+      protocol: TCP
+    - name: election
+      port: 3888
+      targetPort: 
+      protocol: TCP
+    - name: server
+      port: 2888
+      targetPort: 
+      protocol: TCP
+  selector:
+    app: zookeeper
+    release: gone-blackbird
+---
+# Source: rangeregeria/charts/kafka/charts/zookeeper/templates/service.yaml
+apiVersion: v1
+kind: Service
+metadata:
+  name: gone-blackbird-zookeeper
+  labels:
+    app: zookeeper
+    chart: zookeeper-1.0.2
+    release: gone-blackbird
+    heritage: Tiller
+  annotations:
+spec:
+  type: ClusterIP
+  ports:
+    - name: client
+      port: 2181
+      protocol: TCP
+      targetPort: client
+      
+  selector:
+    app: zookeeper
+    release: gone-blackbird
+---
+# Source: rangeregeria/charts/kafka/templates/service-brokers-external.yaml
+apiVersion: v1
+kind: Service
+metadata:
+  annotations:
+    external-dns.alpha.kubernetes.io/hostname: "gone-blackbird.cluster.local"
+  name: gone-blackbird-0-external
+  labels:
+    app: kafka
+    chart: kafka-0.11.1
+    release: gone-blackbird
+    heritage: Tiller
+    pod: "gone-blackbird-kafka-0"
+spec:
+  type: LoadBalancer
+  ports:
+    - name: external-broker
+      port: 31090
+      targetPort: 31090
+      protocol: TCP
+  selector:
+    app: kafka
+    release: gone-blackbird
+    pod: "gone-blackbird-kafka-0"
+---
+# Source: rangeregeria/charts/kafka/templates/service-brokers-external.yaml
+apiVersion: v1
+kind: Service
+metadata:
+  annotations:
+    external-dns.alpha.kubernetes.io/hostname: "gone-blackbird.cluster.local"
+  name: gone-blackbird-2-external
+  labels:
+    app: kafka
+    chart: kafka-0.11.1
+    release: gone-blackbird
+    heritage: Tiller
+    pod: "gone-blackbird-kafka-2"
+spec:
+  type: LoadBalancer
+  ports:
+    - name: external-broker
+      port: 31092
+      targetPort: 31092
+      protocol: TCP
+  selector:
+    app: kafka
+    release: gone-blackbird
+    pod: "gone-blackbird-kafka-2"
+---
+# Source: rangeregeria/charts/kafka/templates/service-brokers-external.yaml
+apiVersion: v1
+kind: Service
+metadata:
+  annotations:
+    external-dns.alpha.kubernetes.io/hostname: "gone-blackbird.cluster.local"
+  name: gone-blackbird-1-external
+  labels:
+    app: kafka
+    chart: kafka-0.11.1
+    release: gone-blackbird
+    heritage: Tiller
+    pod: "gone-blackbird-kafka-1"
+spec:
+  type: LoadBalancer
+  ports:
+    - name: external-broker
+      port: 31091
+      targetPort: 31091
+      protocol: TCP
+  selector:
+    app: kafka
+    release: gone-blackbird
+    pod: "gone-blackbird-kafka-1"
+---
+# Source: rangeregeria/charts/kafka/templates/service-brokers.yaml
+apiVersion: v1
+kind: Service
+metadata:
+  name: gone-blackbird-kafka
+  labels:
+    app: kafka
+    chart: kafka-0.11.1
+    release: gone-blackbird
+    heritage: Tiller
+spec:
+  ports:
+  - name: broker
+    port: 9092
+    targetPort: kafka
+  selector:
+    app: kafka
+    release: gone-blackbird
+---
+# Source: rangeregeria/charts/kafka/templates/service-headless.yaml
+apiVersion: v1
+kind: Service
+metadata:
+  name: gone-blackbird-kafka-headless
+  labels:
+    app: kafka
+    chart: kafka-0.11.1
+    release: gone-blackbird
+    heritage: Tiller
+  annotations:
+    service.alpha.kubernetes.io/tolerate-unready-endpoints: "true"
+spec:
+  ports:
+  - name: broker
+    port: 9092
+  clusterIP: None
+  selector:
+    app: kafka
+    release: gone-blackbird
+---
+# Source: rangeregeria/templates/egeria-service.yaml
+apiVersion: v1
+kind: Service
+metadata:
+  labels:
+    app.kubernetes.io/name: rangeregeria
+    helm.sh/chart: rangeregeria-0.0.1
+    app.kubernetes.io/instance: gone-blackbird
+    app.kubernetes.io/managed-by: Tiller
+    app.kubernetes.io/component: egeria-service
+
+  name: egeria
+
+spec:
+  type: LoadBalancer
+  ports:
+  - name: "egeria"
+    port: 8080
+    targetPort: 8080
+
+  selector:
+    app.kubernetes.io/name: rangeregeria
+    app.kubernetes.io/instance: gone-blackbird
+    app.kubernetes.io/component: egeria-service
+---
+# Source: rangeregeria/templates/mariadb-service.yaml
+apiVersion: v1
+kind: Service
+metadata:
+  labels:
+    app.kubernetes.io/name: rangeregeria
+    helm.sh/chart: rangeregeria-0.0.1
+    app.kubernetes.io/instance: gone-blackbird
+    app.kubernetes.io/managed-by: Tiller
+    app.kubernetes.io/component: ranger-mariadb-service
+
+  name: mariadb
+
+spec:
+  type: LoadBalancer
+  ports:
+  - name: "mariadb"
+    port: 3306
+    targetPort: 3306
+
+  selector:
+    app.kubernetes.io/name: rangeregeria
+    app.kubernetes.io/instance: gone-blackbird
+    app.kubernetes.io/component: ranger-mariadb-service
+---
+# Source: rangeregeria/templates/ranger-admin-service.yaml
+apiVersion: v1
+kind: Service
+metadata:
+  creationTimestamp: null
+  labels:
+    app.kubernetes.io/name: rangeregeria
+    helm.sh/chart: rangeregeria-0.0.1
+    app.kubernetes.io/instance: gone-blackbird
+    app.kubernetes.io/managed-by: Tiller
+    app.kubernetes.io/component: ranger-admin-service
+
+  name: gone-blackbird-rangeregeria-ranger-service
+spec:
+  type: LoadBalancer
+  ports:
+  - name: "ranger-admin"
+    port: 6080
+    targetPort: 6080
+  - name: "ranger-admin-ssl"
+    port: 6182
+    targetPort: 6182
+  - name: "ranger-solr"
+    port: 6083
+    targetPort: 6083
+  - name: "ranger-solr-ssl"
+    port: 6183
+    targetPort: 6183
+  selector:
+    app.kubernetes.io/name: rangeregeria
+    app.kubernetes.io/instance: gone-blackbird
+    app.kubernetes.io/component: ranger-admin-service
+---
+# Source: rangeregeria/templates/egeria-deployment.yaml
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  creationTimestamp: null
+  name: gone-blackbird-rangeregeria-egeria-deployment
+  labels:
+    app.kubernetes.io/name: rangeregeria
+    helm.sh/chart: rangeregeria-0.0.1
+    app.kubernetes.io/instance: gone-blackbird
+    app.kubernetes.io/managed-by: Tiller
+    app.kubernetes.io/component: egeria-service
+
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app.kubernetes.io/name: rangeregeria
+      app.kubernetes.io/instance: gone-blackbird
+      app.kubernetes.io/component: egeria-service
+
+  strategy: {}
+  template:
+    metadata:
+      creationTimestamp: null
+      labels:
+        app.kubernetes.io/name: rangeregeria
+        app.kubernetes.io/instance: gone-blackbird
+        app.kubernetes.io/component: egeria-service
+
+    spec:
+      containers:
+      - image: "planetf1/egeria-standalone:latest"
+        ImagePullPolicy: Always
+        name: rangeregeria-egeria
+        ports:
+        - containerPort: 8080
+        resources: {}
+      restartPolicy: Always
+status: {}
+---
+# Source: rangeregeria/templates/mariadb-deployment.yaml
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  creationTimestamp: null
+  name: gone-blackbird-rangeregeria-mariadb-deployment
+  labels:
+    app.kubernetes.io/name: rangeregeria
+    helm.sh/chart: rangeregeria-0.0.1
+    app.kubernetes.io/instance: gone-blackbird
+    app.kubernetes.io/managed-by: Tiller
+    app.kubernetes.io/component: ranger-mariadb-service
+
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app.kubernetes.io/name: rangeregeria
+      app.kubernetes.io/instance: gone-blackbird
+      app.kubernetes.io/component: ranger-mariadb-service
+
+  strategy: {}
+  template:
+    metadata:
+      creationTimestamp: null
+      labels:
+        app.kubernetes.io/name: rangeregeria
+        app.kubernetes.io/instance: gone-blackbird
+        app.kubernetes.io/component: ranger-mariadb-service
+
+    spec:
+      containers:
+      - env:
+        - name: MYSQL_ROOT_PASSWORD
+          value: admin99
+        image: "planetf1/ranger-docker_mariadb:latest"
+        ImagePullPolicy: Always
+        name: rangeregeria-mariadb
+        ports:
+        - containerPort: 3306
+        resources: {}
+      restartPolicy: Always
+status: {}
+---
+# Source: rangeregeria/templates/ranger-admin-deployment.yaml
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  creationTimestamp: null
+  labels:
+    app.kubernetes.io/name: rangeregeria
+    helm.sh/chart: rangeregeria-0.0.1
+    app.kubernetes.io/instance: gone-blackbird
+    app.kubernetes.io/managed-by: Tiller
+    app.kubernetes.io/component: ranger-admin-service
+  name: gone-blackbird-rangeregeria-rangeradmin
+spec:
+  replicas: 1
+  strategy: {}
+  selector:
+    matchLabels:
+      app.kubernetes.io/name: rangeregeria
+      app.kubernetes.io/instance: gone-blackbird
+      app.kubernetes.io/component: ranger-admin-service
+
+  template:
+    metadata:
+      creationTimestamp: null
+      labels:
+        app.kubernetes.io/name: rangeregeria
+        app.kubernetes.io/instance: gone-blackbird
+        app.kubernetes.io/component: ranger-admin-service
+
+    spec:
+      containers:
+      - name: rangeregeria-ranger
+        image: "planetf1/ranger-docker_ranger-admin:latest"
+        imagePullPolicy: Always
+        ports:
+        - containerPort: 6080
+        - containerPort: 6182
+        - containerPort: 6083
+        - containerPort: 6183
+        - containerPort: 8886
+        resources: {}
+      restartPolicy: Always
+status: {}
+---
+# Source: rangeregeria/charts/kafka/charts/zookeeper/templates/statefulset.yaml
+apiVersion: apps/v1beta1
+kind: StatefulSet
+metadata:
+  name: gone-blackbird-zookeeper
+  labels:
+    app: zookeeper
+    chart: zookeeper-1.0.2
+    release: gone-blackbird
+    heritage: Tiller
+    component: server
+spec:
+  serviceName: gone-blackbird-zookeeper-headless
+  replicas: 3
+  terminationGracePeriodSeconds: 1800
+  selector:
+    matchLabels:
+      app: zookeeper
+      release: gone-blackbird
+      component: server
+  updateStrategy:
+    type: OnDelete
+    
+  template:
+    metadata:
+      labels:
+        app: zookeeper
+        release: gone-blackbird
+        component: server
+      annotations:
+    spec:
+      securityContext:
+        fsGroup: 1000
+        runAsUser: 1000
+        
+      containers:
+
+        - name: zookeeper
+          image: "gcr.io/google_samples/k8szk:v3"
+          imagePullPolicy: IfNotPresent
+          command:
+            - /bin/bash
+            - -xec
+            - zkGenConfig.sh && exec zkServer.sh start-foreground
+          ports:
+            - name: client
+              containerPort: 2181
+              protocol: TCP
+              
+            - name: election
+              containerPort: 3888
+              protocol: TCP
+              
+            - name: server
+              containerPort: 2888
+              protocol: TCP
+              
+          livenessProbe:
+            exec:
+              command:
+              - zkOk.sh
+            initialDelaySeconds: 20
+            
+          readinessProbe:
+            exec:
+              command:
+              - zkOk.sh
+            initialDelaySeconds: 20
+            
+          env:
+            - name: ZK_REPLICAS
+              value: "3"
+            - name: JMXAUTH
+              value: "false"
+            - name: JMXDISABLE
+              value: "false"
+            - name: JMXPORT
+              value: "1099"
+            - name: JMXSSL
+              value: "false"
+            - name: ZK_CLIENT_PORT
+              value: "2181"
+            - name: ZK_ELECTION_PORT
+              value: "3888"
+            - name: ZK_HEAP_SIZE
+              value: "1G"
+            - name: ZK_INIT_LIMIT
+              value: "5"
+            - name: ZK_LOG_LEVEL
+              value: "INFO"
+            - name: ZK_MAX_CLIENT_CNXNS
+              value: "60"
+            - name: ZK_MAX_SESSION_TIMEOUT
+              value: "40000"
+            - name: ZK_MIN_SESSION_TIMEOUT
+              value: "4000"
+            - name: ZK_PURGE_INTERVAL
+              value: "0"
+            - name: ZK_SERVER_PORT
+              value: "2888"
+            - name: ZK_SNAP_RETAIN_COUNT
+              value: "3"
+            - name: ZK_SYNC_LIMIT
+              value: "10"
+            - name: ZK_TICK_TIME
+              value: "2000"
+          resources:
+            {}
+            
+          volumeMounts:
+            - name: data
+              mountPath: /var/lib/zookeeper
+      volumes:
+        - name: data
+          emptyDir: {}
+---
+# Source: rangeregeria/charts/kafka/templates/statefulset.yaml
+apiVersion: apps/v1beta1
+kind: StatefulSet
+metadata:
+  name: gone-blackbird-kafka
+  labels:
+    app: kafka
+    chart: kafka-0.11.1
+    release: gone-blackbird
+    heritage: Tiller
+spec:
+  serviceName: gone-blackbird-kafka-headless
+  podManagementPolicy: OrderedReady
+  updateStrategy:
+    type: OnDelete
+    
+  replicas: 3
+  template:
+    metadata:
+      annotations:
+      labels:
+        app: kafka
+        release: gone-blackbird
+    spec:
+      ## ref: https://github.com/Yolean/kubernetes-kafka/blob/master/kafka/50kafka.yml
+      initContainers:
+      - name: init-ext
+        image: "lwolf/kubectl_deployer:0.4"
+        imagePullPolicy: "IfNotPresent"
+        command:
+          - sh
+          - -euxc
+          - "kubectl label pods ${POD_NAME} --namespace ${POD_NAMESPACE} pod=${POD_NAME} --overwrite"
+        env:
+          - name: POD_NAME
+            valueFrom:
+              fieldRef:
+                fieldPath: metadata.name
+          - name: POD_NAMESPACE
+            valueFrom:
+              fieldRef:
+                fieldPath: metadata.namespace
+      containers:
+      - name: kafka-broker
+        image: "confluentinc/cp-kafka:4.1.2-2"
+        imagePullPolicy: "IfNotPresent"
+        livenessProbe:
+          exec:
+            command:
+              - sh
+              - -ec
+              - /usr/bin/jps | /bin/grep -q SupportedKafka
+          initialDelaySeconds: 30
+          timeoutSeconds: 5
+        readinessProbe:
+          tcpSocket:
+            port: kafka
+          initialDelaySeconds: 30
+          periodSeconds: 10
+          timeoutSeconds: 5
+          successThreshold: 1
+          failureThreshold: 3
+        ports:
+        - containerPort: 9092
+          name: kafka
+        - containerPort: 31090
+          name: external-0
+        - containerPort: 31091
+          name: external-1
+        - containerPort: 31092
+          name: external-2
+        resources:
+          {}
+          
+        env:
+        - name: POD_IP
+          valueFrom:
+            fieldRef:
+              fieldPath: status.podIP
+        - name: KAFKA_HEAP_OPTS
+          value: -Xmx1G -Xms1G
+        - name: KAFKA_ZOOKEEPER_CONNECT
+          value: "gone-blackbird-zookeeper:2181"
+        - name: KAFKA_LOG_DIRS
+          value: "/opt/kafka/data/logs"
+        - name: "KAFKA_OFFSETS_TOPIC_REPLICATION_FACTOR"
+          value: "3"
+        - name: KAFKA_JMX_PORT
+          value: "5555"
+        # This is required because the Downward API does not yet support identification of
+        # pod numbering in statefulsets. Thus, we are required to specify a command which
+        # allows us to extract the pod ID for usage as the Kafka Broker ID.
+        # See: https://github.com/kubernetes/kubernetes/issues/31218
+        command:
+        - sh
+        - -exc
+        - |
+          unset KAFKA_PORT && \
+          export KAFKA_BROKER_ID=${HOSTNAME##*-} && \
+          export KAFKA_ADVERTISED_LISTENERS=PLAINTEXT://${POD_IP}:9092 && \
+          exec /etc/confluent/docker/run
+        volumeMounts:
+        - name: datadir
+          mountPath: "/opt/kafka/data"
+      volumes:
+      terminationGracePeriodSeconds: 60
+  volumeClaimTemplates:
+  - metadata:
+      name: datadir
+    spec:
+      accessModes: [ "ReadWriteOnce" ]
+      resources:
+        requests:
+          storage: 1Gi
+---
+# Source: rangeregeria/charts/kafka/charts/zookeeper/templates/poddisruptionbudget.yaml
+apiVersion: policy/v1beta1
+kind: PodDisruptionBudget
+metadata:
+  name: gone-blackbird-zookeeper
+  labels:
+    app: zookeeper
+    chart: zookeeper-1.0.2
+    release: gone-blackbird
+    heritage: Tiller
+    component: server
+spec:
+  selector:
+    matchLabels:
+      app: zookeeper
+      release: gone-blackbird
+      component: server
+  maxUnavailable: 1
+LAST DEPLOYED: Wed Oct 10 15:04:45 2018
+NAMESPACE: default
+STATUS: DEPLOYED
+
+RESOURCES:
+==> v1/ConfigMap
+NAME                                   AGE
+gone-blackbird-rangeregeria-configmap  1s
+
+==> v1/Service
+gone-blackbird-zookeeper-headless           1s
+gone-blackbird-zookeeper                    1s
+gone-blackbird-0-external                   1s
+gone-blackbird-2-external                   1s
+gone-blackbird-1-external                   1s
+gone-blackbird-kafka                        1s
+gone-blackbird-kafka-headless               1s
+egeria                                      1s
+mariadb                                     1s
+gone-blackbird-rangeregeria-ranger-service  1s
+
+==> v1/Deployment
+gone-blackbird-rangeregeria-egeria-deployment   1s
+gone-blackbird-rangeregeria-mariadb-deployment  1s
+gone-blackbird-rangeregeria-rangeradmin         1s
+
+==> v1beta1/StatefulSet
+gone-blackbird-zookeeper  1s
+gone-blackbird-kafka      1s
+
+==> v1beta1/PodDisruptionBudget
+gone-blackbird-zookeeper  1s
+
+==> v1/Pod(related)
+
+NAME                                                             READY  STATUS             RESTARTS  AGE
+gone-blackbird-rangeregeria-egeria-deployment-564fd8c5bf-rrzf5   0/1    ContainerCreating  0         1s
+gone-blackbird-rangeregeria-mariadb-deployment-7755c5f877-dbqs6  0/1    ContainerCreating  0         1s
+gone-blackbird-rangeregeria-rangeradmin-69f77bccf6-7jzpt         0/1    ContainerCreating  0         1s
+gone-blackbird-zookeeper-0                                       0/1    ContainerCreating  0         1s
+gone-blackbird-kafka-0                                           0/1    Pending            0         1s
+
+

@@ -27,4 +27,8 @@ image:
   fullnameOverride: ""
 
 
+kafka:
+  external:
+    enabled: true
+    type: LoadBalancer
 

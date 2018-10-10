@@ -6,20 +6,20 @@ metadata:
     helm.sh/chart: {{ include "myapp.chart" . }}
     app.kubernetes.io/instance: {{ .Release.Name }}
     app.kubernetes.io/managed-by: {{ .Release.Service }}
-    app.kubernetes.io/component: gaian-service
+    app.kubernetes.io/component: ranger-mariadb-service
 
-  name: gaian
+  name: mariadb
 
 spec:
   type: LoadBalancer
   ports:
-  - name: "gaian"
-    port: 6414
-    targetPort: 6414
+  - name: "mariadb"
+    port: 3306
+    targetPort: 3306
 
   selector:
     app.kubernetes.io/name: {{ include "myapp.name" . }}
     app.kubernetes.io/instance: {{ .Release.Name }}
-    app.kubernetes.io/component: gaian-service
+    app.kubernetes.io/component: ranger-mariadb-service
 
 
