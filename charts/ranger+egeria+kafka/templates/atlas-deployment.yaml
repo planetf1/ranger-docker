@@ -33,7 +33,7 @@ spec:
         ImagePullPolicy: Always
         name: {{ .Chart.Name }}-atlas
         ports:
-        - containerPort: 8080
+        - containerPort: 21000
         resources: {}
       restartPolicy: Always
 status: {}
