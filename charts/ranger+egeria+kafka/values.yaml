@@ -23,6 +23,11 @@ image:
     tag: latest
     pullPolicy: IfNotPresent
 
+  atlas:
+    repository: planetf1/atlas-1773-egeria
+    tag: latest
+    pullPolicy: IfNotPresent
+
   nameOverride: ""
   fullnameOverride: ""
 
