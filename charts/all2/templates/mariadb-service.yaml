@@ -11,7 +11,7 @@ metadata:
   name: mariadb
 
 spec:
-  type: "{{ .Values.service.type }}"
+  type: NodePort
   ports:
   - name: "mariadb"
     port: 3306

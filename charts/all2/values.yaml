@@ -13,13 +13,27 @@ image:
     tag: latest
     pullPolicy: IfNotPresent
 
+  egeria:
+    repository: planetf1/egeria-standalone
+    tag: latest
+    pullPolicy: IfNotPresent
+
+  gaian:
+    repository: planetf1/gaian
+    tag: latest
+    pullPolicy: IfNotPresent
+
+  atlas:
+    repository: planetf1/atlas-1773-egeria
+    tag: latest
+    pullPolicy: IfNotPresent
+
   nameOverride: ""
   fullnameOverride: ""
 
-# Network configuration
-service:
-  #LoadBalancer is another option (not for IBM Cloud free cluster)
-  type: NodePort
 
-
+kafka:
+  external:
+    enabled: true
+    type: LoadBalancer
 

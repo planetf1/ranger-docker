@@ -2,13 +2,13 @@ apiVersion: apps/v1
 kind: Deployment
 metadata:
   creationTimestamp: null
-  name: {{ include "myapp.fullname" . }}-egeria-deployment
+  name: {{ include "myapp.fullname" . }}-mariadb-deployment
   labels:
     app.kubernetes.io/name: {{ include "myapp.name" . }}
     helm.sh/chart: {{ include "myapp.chart" . }}
     app.kubernetes.io/instance: {{ .Release.Name }}
     app.kubernetes.io/managed-by: {{ .Release.Service }}
-    app.kubernetes.io/component: egeria-service
+    app.kubernetes.io/component: ranger-mariadb-service
 
 spec:
   replicas: 1
@@ -16,7 +16,7 @@ spec:
     matchLabels:
       app.kubernetes.io/name: {{ include "myapp.name" . }}
       app.kubernetes.io/instance: {{ .Release.Name }}
-      app.kubernetes.io/component: egeria-service
+      app.kubernetes.io/component: ranger-mariadb-service
 
   strategy: {}
   template:
@@ -25,15 +25,18 @@ spec:
       labels:
         app.kubernetes.io/name: {{ include "myapp.name" . }}
         app.kubernetes.io/instance: {{ .Release.Name }}
-        app.kubernetes.io/component: egeria-service
+        app.kubernetes.io/component: ranger-mariadb-service
 
     spec:
       containers:
-      - image: "{{ .Values.image.egeria.repository }}:{{ .Values.image.egeria.tag }}"
+      - env:
+        - name: MYSQL_ROOT_PASSWORD
+          value: admin99
+        image: "{{ .Values.image.mariadb.repository }}:{{ .Values.image.mariadb.tag }}"
         ImagePullPolicy: Always
-        name: {{ .Chart.Name }}-egeria
+        name: {{ .Chart.Name }}-mariadb
         ports:
-        - containerPort: 8080
+        - containerPort: 3306
         resources: {}
       restartPolicy: Always
 status: {}

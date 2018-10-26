@@ -8,7 +8,7 @@ metadata:
     app.kubernetes.io/managed-by: {{ .Release.Service }}
     app.kubernetes.io/component: atlas-service
 
-  name: egeria
+  name: atlas
 
 spec:
   type: LoadBalancer

@@ -2,13 +2,13 @@ apiVersion: apps/v1
 kind: Deployment
 metadata:
   creationTimestamp: null
-  name: {{ include "myapp.fullname" . }}-egeria-deployment
+  name: {{ include "myapp.fullname" . }}-atlas-deployment
   labels:
     app.kubernetes.io/name: {{ include "myapp.name" . }}
     helm.sh/chart: {{ include "myapp.chart" . }}
     app.kubernetes.io/instance: {{ .Release.Name }}
     app.kubernetes.io/managed-by: {{ .Release.Service }}
-    app.kubernetes.io/component: egeria-service
+    app.kubernetes.io/component: atlas-service
 
 spec:
   replicas: 1
@@ -16,7 +16,7 @@ spec:
     matchLabels:
       app.kubernetes.io/name: {{ include "myapp.name" . }}
       app.kubernetes.io/instance: {{ .Release.Name }}
-      app.kubernetes.io/component: egeria-service
+      app.kubernetes.io/component: atlas-service
 
   strategy: {}
   template:
@@ -25,15 +25,15 @@ spec:
       labels:
         app.kubernetes.io/name: {{ include "myapp.name" . }}
         app.kubernetes.io/instance: {{ .Release.Name }}
-        app.kubernetes.io/component: egeria-service
+        app.kubernetes.io/component: atlas-service
 
     spec:
       containers:
-      - image: "{{ .Values.image.egeria.repository }}:{{ .Values.image.egeria.tag }}"
+      - image: "{{ .Values.image.atlas.repository }}:{{ .Values.image.atlas.tag }}"
         ImagePullPolicy: Always
-        name: {{ .Chart.Name }}-egeria
+        name: {{ .Chart.Name }}-atlas
         ports:
-        - containerPort: 8080
+        - containerPort: 21000
         resources: {}
       restartPolicy: Always
 status: {}

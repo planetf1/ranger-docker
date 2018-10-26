@@ -1,0 +1,6 @@
+[debug] Created tunnel using local port: '58429'
+
+[debug] SERVER: "127.0.0.1:58429"
+
+[debug] Original chart version: ""
+Error: Non-absolute URLs should be in form of repo_name/path_to_chart, got: *+*+*

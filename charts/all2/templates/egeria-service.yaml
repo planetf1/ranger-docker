@@ -6,20 +6,20 @@ metadata:
     helm.sh/chart: {{ include "myapp.chart" . }}
     app.kubernetes.io/instance: {{ .Release.Name }}
     app.kubernetes.io/managed-by: {{ .Release.Service }}
-    app.kubernetes.io/component: ranger-mariadb-service
+    app.kubernetes.io/component: egeria-service
 
-  name: mariadb
+  name: egeria
 
 spec:
-  type: "{{ .Values.service.type }}"
+  type: NodePort
   ports:
-  - name: "mariadb"
-    port: 3306
-    targetPort: 3306
+  - name: "egeria"
+    port: 8080
+    targetPort: 8080
 
   selector:
     app.kubernetes.io/name: {{ include "myapp.name" . }}
     app.kubernetes.io/instance: {{ .Release.Name }}
-    app.kubernetes.io/component: ranger-mariadb-service
+    app.kubernetes.io/component: egeria-service
 
 
