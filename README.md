@@ -1,3 +1,13 @@
+# ranger-docker
+
+## THIS PROJECT IS NOW DEPRECATED. 
+
+### Please go to http://github.com/odpi/egeria to read about Egeria, where you will also ongoing work around deployment of a 
+### variety of components using docker build scripts, and helm charts to deploy to kubernetes
+### If you are interested in directly contributing this capability to Apache Ranger please feel free - and ideally get in touch so we can work on merging in the code from Egeria :-)
+
+### Nigel Jones
+
 <h1>Docker image for standalone ranger</h1>
 
 
